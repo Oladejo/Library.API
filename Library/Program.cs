@@ -26,6 +26,9 @@ namespace Library
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
                 logger.LogError(ex, "An error occurred while migrating the database.");
             }
+
+            // run the web app
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

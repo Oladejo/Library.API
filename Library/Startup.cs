@@ -27,6 +27,7 @@ namespace Library
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Remove "text/json" from the app
             //services.AddMvc(setupAction =>
             //{
             //    setupAction.ReturnHttpNotAcceptable = true;
@@ -44,7 +45,8 @@ namespace Library
             //    }
             //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddRazorPages().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            //services.AddRazorPages().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // register the DbContext on the container, getting the connection string from
             // appSettings (note: use this during development; in a production environment,
@@ -100,7 +102,7 @@ namespace Library
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
 
         }
