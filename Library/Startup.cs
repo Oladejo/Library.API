@@ -127,7 +127,7 @@ namespace Library
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/LibraryOpenAPISpecification/swagger.json", "Libary API");
-                c.RoutePrefix = "library";
+                c.RoutePrefix = "";
                 c.DocumentTitle = ("Library Open API Specification");
             });
         }
