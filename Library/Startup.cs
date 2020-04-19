@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Linq;
 
@@ -78,6 +79,22 @@ namespace Library
             services.AddScoped<IAuthorRepository, AuthorRepository>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("LibraryOpenAPISpecification", new OpenApiInfo
+                {
+                    Title = "Library API",
+                    Version = "1",
+                    Description = "Documenting an ASP.NET Core API with OpenAPI / Swagger",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Oladejo Azeez",
+                        Email = "bab.oladejo@student.oauife.edu.ng",
+                        Url = new Uri("https://github.com/Oladejo")
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +113,8 @@ namespace Library
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -105,6 +124,12 @@ namespace Library
                 endpoints.MapControllers();
             });
 
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/LibraryOpenAPISpecification/swagger.json", "Libary API");
+                c.RoutePrefix = "library";
+                c.DocumentTitle = ("Library Open API Specification");
+            });
         }
     }
 }
