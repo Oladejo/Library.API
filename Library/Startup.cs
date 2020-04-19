@@ -3,17 +3,16 @@ using Library.Contexts;
 using Library.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Linq;
+using System.IO;
+using System.Reflection;
 
 namespace Library
 {
@@ -47,7 +46,10 @@ namespace Library
             //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //services.AddRazorPages().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddControllers()
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
 
             // register the DbContext on the container, getting the connection string from
             // appSettings (note: use this during development; in a production environment,
@@ -80,9 +82,9 @@ namespace Library
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(setupAction =>
             {
-                c.SwaggerDoc("LibraryOpenAPISpecification", new OpenApiInfo
+                setupAction.SwaggerDoc("LibraryOpenAPISpecification", new OpenApiInfo
                 {
                     Title = "Library API",
                     Version = "1",
@@ -94,6 +96,10 @@ namespace Library
                         Url = new Uri("https://github.com/Oladejo")
                     }
                 });
+
+                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+                setupAction.IncludeXmlComments(xmlCommentsFullPath);
             });
         }
 

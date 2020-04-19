@@ -22,6 +22,7 @@ namespace Library.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDTO>>> GetAuthors()
         {
@@ -29,6 +30,11 @@ namespace Library.Controllers
             return Ok(_mapper.Map<IEnumerable<AuthorDTO>>(authorsFromRepo));
         }
 
+        /// <summary>
+        /// Get an author by his/her id
+        /// </summary>
+        /// <param name="authorId">The id of the author you want to get</param>
+        /// <returns>An ActionResult of type Author</returns>
         [HttpGet("{authorId}")]
         public async Task<ActionResult<AuthorDTO>> GetAuthor(Guid authorId)
         {
@@ -61,6 +67,23 @@ namespace Library.Controllers
             return Ok(_mapper.Map<AuthorDTO>(authorFromRepo));
         }
 
+        /// <summary>
+        /// Partially update an author
+        /// </summary>
+        /// <param name="authorId">The id of the author you want to get</param>
+        /// <param name="patchDocument">The set of operations to apply to the author</param>
+        /// <returns>An ActionResult of type Author</returns>
+        /// <remarks>Sample request (this request updates the author's **first name**)  
+        /// 
+        /// PATCH /authors/authorId
+        /// [ 
+        ///     {
+        ///         "op": "replace", 
+        ///         "path": "/firstname", 
+        ///         "value": "new first name" 
+        ///     } 
+        /// ] 
+        /// </remarks>
         [HttpPatch("{authorId}")]
         public async Task<ActionResult<AuthorDTO>> UpdateAuthor(Guid authorId,
             JsonPatchDocument<AuthorForUpdate> patchDocument)
@@ -73,8 +96,7 @@ namespace Library.Controllers
 
             // map to DTO to apply the patch to
             var author = _mapper.Map<AuthorForUpdate>(authorFromRepo);
-           // patchDocument.ApplyTo(author, ModelState); //error
-            patchDocument.ApplyTo(author);
+            patchDocument.ApplyTo(author, ModelState); 
 
             // if there are errors when applying the patch the patch doc 
             // was badly formed  These aren't caught via the ApiController
