@@ -93,7 +93,7 @@ namespace Library
                     {
                         Name = "Oladejo Azeez",
                         Email = "bab.oladejo@student.oauife.edu.ng",
-                        Url = new Uri("https://github.com/Oladejo")
+                        Url = new Uri("https://twitter.com/OladejoBAzeez")
                     }
                 });
 

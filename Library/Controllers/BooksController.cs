@@ -39,6 +39,9 @@ namespace Library.Controllers
         }
 
         [HttpGet("{bookId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<BookDTO>> GetBook(Guid authorId, Guid bookId)
         {
             if (!await _authorRepository.AuthorExistsAsync(authorId))
